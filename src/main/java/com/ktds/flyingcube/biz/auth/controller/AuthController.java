@@ -35,10 +35,10 @@ public class AuthController {
     private final JwtUtils jwtUtils;
     private final RedisUtils redisUtils;
 
-    @Value("${jwt.expirationDateInMs}")
+    @Value("${fc2.jwt.expirationDateInMs}")
     public Long jwtExpirationInMs;
 
-    @Value("${jwt.refreshExpirationDateInMs}")
+    @Value("${fc2.jwt.refreshExpirationDateInMs}")
     public Long refreshExpirationDateInMs;
 
     @PostMapping("/signin")

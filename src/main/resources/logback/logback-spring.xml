@@ -81,7 +81,7 @@
         </logger>
 
         <!-- jdbc loggers -->
-        <logger name="jdbc.sqltiming" level="INFO" additivity="false">
+        <logger name="jdbc.sqltiming" level="ERROR" additivity="false">
             <appender-ref ref="STDOUT" />
         </logger>
 
@@ -164,7 +164,7 @@
         </logger>
 
         <!-- jdbc loggers -->
-        <logger name="jdbc.sqltiming" level="INFO" additivity="false">
+        <logger name="jdbc.sqltiming" level="ERROR" additivity="false">
             <appender-ref ref="STDOUT" />
             <appender-ref ref="FILEOUT" />
         </logger>

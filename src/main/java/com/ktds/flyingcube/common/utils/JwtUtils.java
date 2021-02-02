@@ -19,17 +19,17 @@ public class JwtUtils {
     private Long expirationDateInMs;
     private Long refreshExpirationDateInMs;
 
-    @Value("${jwt.secret}")
+    @Value("${fc2.jwt.secret}")
     public void setSecret(String secret) {
         this.secret = secret;
     }
 
-    @Value("${jwt.expirationDateInMs}")
+    @Value("${fc2.jwt.expirationDateInMs}")
     public void setJwtExpirationInMs(Long expirationDateInMs) {
         this.expirationDateInMs = expirationDateInMs;
     }
 
-    @Value("${jwt.refreshExpirationDateInMs}")
+    @Value("${fc2.jwt.refreshExpirationDateInMs}")
     public void setRefreshExpirationDateInMs(Long refreshExpirationDateInMs) {
         this.refreshExpirationDateInMs = refreshExpirationDateInMs;
     }
