@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scanPeriod="60 seconds">
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!-- log value -->
+    <property name="LOG_PATTERN" value="%d{yyyyMMdd HH:mm:ss.SSS} [%thread] %-3level %logger{5} - %msg %n"/>
+    <property name="TRACE_LOG_DIR" value="/logs/trace/order" />
+    <property name="ERROR_LOG_DIR" value="/logs/error/order" />
+
+    <!-- Console Appender -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Trace File Appender -->
+    <appender name="TRACE_FILEOUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"> 
+            <level>ERROR</level> 
+            <onMatch>DENY</onMatch> 
+            <onMismatch>ACCEPT</onMismatch> 
+        </filter>
+        <file>${TRACE_LOG_DIR}/flying-cube-trace.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${TRACE_LOG_DIR}/archive/flying-cube-trace.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP"> <!-- 파일당 최고 용량 kb, mb, gb -->
+                <maxFileSize>100mb</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy> <!-- 일자별 로그파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거-->
+            <maxHistory>30</maxHistory> <!--<MinIndex>1</MinIndex> <MaxIndex>10</MaxIndex>-->
+        </rollingPolicy>
+    </appender>
+    
+     <!-- Error File Appender -->
+    <appender name="ERROR_FILEOUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+         <filter class="ch.qos.logback.classic.filter.LevelFilter"> 
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch> 
+            <onMismatch>DENY</onMismatch> 
+        </filter>   
+        <file>${ERROR_LOG_DIR}/flying-cube-error.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+           <fileNamePattern>${ERROR_LOG_DIR}/archive/flying-cube-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP"> <!-- 파일당 최고 용량 kb, mb, gb -->
+                <maxFileSize>100mb</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy> <!-- 일자별 로그파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거-->
+            <maxHistory>30</maxHistory> <!--<MinIndex>1</MinIndex> <MaxIndex>10</MaxIndex>-->
+        </rollingPolicy>
+    </appender>   
+
+    <!-- default, local -->
+    <springProfile name="default, local">
+        <logger name="com.ktds.flyingcube" level="INFO" additivity="false">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="TRACE_FILEOUT" />
+            <appender-ref ref="ERROR_FILEOUT" />
+        </logger>
+
+        <logger name="org.springframework.web" level="DEBUG" additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <logger name="org.springframework.core" level="INFO" additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <logger name="org.springframework.security" level="INFO" additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <logger name="org.springframework.transaction.interceptor" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <!-- jdbc loggers -->
+        <logger name="jdbc.sqltiming" level="INFO" additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <logger name="jdbc.sqlonly" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <logger name="jdbc.audit" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <logger name="jdbc.resultset" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <logger name="jdbc.resultsettable" level="INFO" additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <logger name="org.apache.ibatis" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <logger name="com.zaxxer.hikari" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <root level="ERROR">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="ERROR_FILEOUT" />
+        </root>
+        
+    </springProfile>
+
+    <!-- dev -->
+    <springProfile name="dev">
+        <logger name="com.ktds.flyingcube" level="INFO" additivity="false">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </logger>
+
+        <logger name="org.springframework.web" level="INFO" additivity="false">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </logger>
+
+        <logger name="org.springframework.core" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </logger>
+
+        <logger name="org.springframework.beans" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </logger>
+
+        <logger name="org.springframework.context" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </logger>
+
+        <logger name="org.springframework.security" level="INFO" additivity="false">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </logger>
+
+        <logger name="org.springframework.tx" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </logger>
+
+        <logger name="org.springframework.jdbc" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </logger>
+
+        <logger name="org.springframework.transaction.interceptor" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </logger>
+
+        <!-- jdbc loggers -->
+        <logger name="jdbc.sqltiming" level="INFO" additivity="false">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </logger>
+
+        <logger name="jdbc.sqlonly" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </logger>
+
+        <logger name="jdbc.audit" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </logger>
+
+        <logger name="jdbc.resultset" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </logger>
+
+        <logger name="jdbc.resultsettable" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </logger>
+
+        <logger name="com.zaxxer.hikari" level="ERROR" additivity="false">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </logger>
+
+        <root level="ERROR">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </root>
+    </springProfile>
+
+    <!-- prod -->
+    <springProfile name="prod">
+        <root level="ERROR">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILEOUT" />
+        </root>
+    </springProfile>
+
+</configuration>
