@@ -80,7 +80,7 @@ public class LogAspect {
             }
         }
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        log.info("@EndPoint [{}]'s arguments \r\n=> {} ", pjp.getSignature().getName(),
+        log.info("@EndPoint [{}]'s parameter \r\n=> {} ", pjp.getSignature().getName(),
                 !StringUtils.isBlank(gson.toJson(arg)) ? gson.toJson(arg) : "Empty");
     }
 
@@ -93,7 +93,7 @@ public class LogAspect {
      */
     @AfterReturning(value = "execution(* com.ktds.flyingcube.*.*.controller.*.*(..))", returning = "result")
     public void afterReturning(JoinPoint jp, Object result) {
-        log.info("@EndPoint {}]'s result value \r\n=> {}", jp, result);
+        log.info("@EndPoint [{}]'s result \r\n=> {}", jp, result);
     }
 
 

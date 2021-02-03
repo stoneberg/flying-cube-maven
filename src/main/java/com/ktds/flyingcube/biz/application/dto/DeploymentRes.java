@@ -27,6 +27,7 @@ public class DeploymentRes {
         private Integer replicas;
         private String triggerStg;
         private String updateStg;
+        @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDateTime createdDt;
     }
 }

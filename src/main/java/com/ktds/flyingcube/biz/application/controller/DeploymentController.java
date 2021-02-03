@@ -1,7 +1,5 @@
 package com.ktds.flyingcube.biz.application.controller;
 
-import com.ktds.flyingcube.biz.application.domain.Deployment;
-import com.ktds.flyingcube.biz.application.dto.DeploymentReq;
 import com.ktds.flyingcube.biz.application.dto.DeploymentReq.DeploymentDto;
 import com.ktds.flyingcube.biz.application.dto.DeploymentReq.FindDto;
 import com.ktds.flyingcube.biz.application.dto.DeploymentRes;
@@ -22,7 +20,7 @@ public class DeploymentController {
     private final DeploymentService deploymentService;
 
     @PostMapping("/deployments")
-    public ResponseDto<?> one(@RequestBody final DeploymentDto createDto) {
+    public ResponseDto<?> create(@RequestBody final DeploymentDto createDto) {
         return ResponseDto.of(deploymentService.createDeployment(createDto));
     }
 
@@ -38,7 +36,7 @@ public class DeploymentController {
     }
 
     @PutMapping("/deployments/{deploymentId}")
-    public ResponseDto<?> one(@PathVariable("deploymentId") final Integer deploymentId, @RequestBody final DeploymentDto updateDto) {
+    public ResponseDto<?> update(@PathVariable("deploymentId") final Integer deploymentId, @RequestBody final DeploymentDto updateDto) {
         return ResponseDto.of(deploymentService.updateDeployment(deploymentId, updateDto));
     }
 

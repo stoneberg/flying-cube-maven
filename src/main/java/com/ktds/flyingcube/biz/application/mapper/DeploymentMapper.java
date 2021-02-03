@@ -6,9 +6,10 @@ import com.ktds.flyingcube.config.MapStructMapperConfig;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(config = MapStructMapperConfig.class)
 public interface DeploymentMapper {
-
     OneDto toDto(Deployment deployment);
-
+    List<OneDto> toDtoList(List<Deployment> deployments);
 }

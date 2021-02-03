@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.ktds.flyingcube.biz.application.dto.DeploymentRes.AllDto;
 
 @Slf4j
@@ -32,8 +34,7 @@ public class DeploymentService {
     @Transactional
     public OneDto createDeployment(DeploymentDto createDto) {
         final Deployment deployment = Deployment.createDeployment(createDto);
-        deploymentRepository.save(deployment);
-        return deploymentMapper.toDto(deployment);
+        return deploymentMapper.toDto(deploymentRepository.save(deployment));
     }
 
     // get all
@@ -64,4 +65,5 @@ public class DeploymentService {
                 .orElseThrow(() -> new ApplicationException(ApplicationExType.NOT_FOUND));
         deploymentRepository.deleteById(deploymentId);
     }
+ 
 }
