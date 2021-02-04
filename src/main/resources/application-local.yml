@@ -1,6 +1,6 @@
 server:
   port: 9090
-  
+
 spring:
   application:
     name: FLYING-CUBE
@@ -27,12 +27,11 @@ spring:
     password: new1234@
 
 logging:
-  config: classpath:logback/logback-spring.xml    
+  config: classpath:logback/logback-spring.xml
 
 fc2:
   jwt:
     secret: 123456789012345678901234567890
     expirationDateInMs: 1800000 #1800000 # half hour
     refreshExpirationDateInMs: 3600000 # hour
-    
-    
+

@@ -16,6 +16,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.frameoptions.WhiteListedAllowFromStrategy;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -53,19 +57,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .httpBasic().disable()
-            .cors().and()
-            .csrf().disable()
-            .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
-            .and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .authorizeRequests()
-                .antMatchers("/**").permitAll()
-//            .antMatchers("/api/auth/**").permitAll()
-//            .antMatchers("/api/application/**").hasAnyRole("USER", "ADMIN")
-//            .antMatchers("/api/users/**").hasRole("ADMIN")
-            .anyRequest().authenticated();
+                .httpBasic().disable()
+                .cors().and()
+                .csrf().disable()
+                .headers().frameOptions().disable().and()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers("/api/auth/**", "/h2-console/**").permitAll()
+                .antMatchers("/api/application/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/users/**").hasRole("ADMIN")
+                .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }

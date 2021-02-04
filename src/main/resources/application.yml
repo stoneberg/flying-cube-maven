@@ -3,14 +3,14 @@ server:
   
 spring:
   profiles:
-    active: local # empty=> default(current). local, dev, prod will overwrite this default profile
+    active: default # empty=> default(current). local, dev, prod will overwrite this default profile
   application:
     name: FLYING-CUBE
-  banner:
-    location: classpath:banner/banner.txt
   h2:
     console:
       enabled: true
+  banner:
+    location: classpath:banner/banner.txt
   datasource:
 #    url: jdbc:h2:mem:testdb
 #    driverClassName: org.h2.Driver
