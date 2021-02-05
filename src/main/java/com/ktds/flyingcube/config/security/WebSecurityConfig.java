@@ -1,8 +1,8 @@
 package com.ktds.flyingcube.config.security;
 
+import com.ktds.flyingcube.common.utils.JwtUtils;
 import com.ktds.flyingcube.config.security.jwt.AuthEntryPointJwt;
 import com.ktds.flyingcube.config.security.jwt.AuthTokenFilter;
-import com.ktds.flyingcube.common.utils.JwtUtils;
 import com.ktds.flyingcube.config.security.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,10 +16,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.header.writers.frameoptions.WhiteListedAllowFromStrategy;
-import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
