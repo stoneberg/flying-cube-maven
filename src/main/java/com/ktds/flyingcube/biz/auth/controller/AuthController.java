@@ -62,12 +62,13 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshJwt(@Valid @RequestBody TokenDto tokenDto) {
-        String newAccessToken;
-        String newRefreshToken;
+        String newAccessToken = "";
+        String newRefreshToken = "";
         JwtResponse jwtResponse = new JwtResponse();
         String refreshToken = tokenDto.getRefreshToken();
         // check refresh token is valid
         final boolean isValidJwt = jwtUtils.validateJwt(refreshToken);
+        log.info("@isValidJwt========>{}", isValidJwt);
 
         if (isValidJwt) {
             // get username from redis
@@ -84,8 +85,9 @@ public class AuthController {
             jwtResponse.setAccessToken(newAccessToken);
             jwtResponse.setRefreshToken(newRefreshToken);
         }
-
-        log.info("@jwtResponse==========>{}", refreshToken);
+        log.info("@jwtResponse.newAccessToken======>{}", newAccessToken);
+        log.info("@jwtResponse.newRefreshToken=====>{}", newRefreshToken);
+        log.info("@jwtResponse.jwtResponse=========>{}", jwtResponse);
         return ResponseEntity.ok(jwtResponse);
     }
 
