@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ktds</groupId>
-	<artifactId>flying-cube</artifactId>
+	<artifactId>flying-cube-springb</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>flying-cube-maven</name>
 	<description>Demo project for Spring Boot</description>
@@ -125,29 +125,10 @@
 	</dependencies>
 
     <build>
-        <defaultGoal>package</defaultGoal>
-        <directory>${basedir}/target</directory>
-        <finalName>KTDS-QESIGN</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <warName>KTDS-QESIGN</warName>
-                    <webResources>
-                        <resources>
-                            <directory>libs/</directory>
-                            <targetPath>WEB-INF/lib</targetPath>
-                            <includes>
-                                <include>**/*.jar</include>
-                            </includes>
-                        </resources>
-                    </webResources>
-                </configuration>
             </plugin>
             <!-- querydsl -->
             <plugin>
@@ -170,6 +151,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -197,6 +179,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
                 <configuration>
                     <excludes>
                         <exclude>**/*.java</exclude>
