@@ -60,8 +60,8 @@ public class AuthController {
         return ResponseEntity.ok(jwtResponse);
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<?> refreshJwt(@Valid @RequestBody TokenDto tokenDto) {
+    @PostMapping("/token/refresh")
+    public ResponseEntity<?> refresh(@Valid @RequestBody TokenDto tokenDto) {
         String newAccessToken = "";
         String newRefreshToken = "";
         JwtResponse jwtResponse = new JwtResponse();

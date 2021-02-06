@@ -3,7 +3,7 @@ server:
   
 spring:
   profiles:
-    active: default # empty=> default(current). local, dev, prod will overwrite this default profile
+    active: local # empty=> default(current). local, dev, prod will overwrite this default profile
   application:
     name: FLYING-CUBE
   h2:

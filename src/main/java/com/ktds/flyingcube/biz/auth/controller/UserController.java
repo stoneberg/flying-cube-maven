@@ -16,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{username}")
-    public ResponseDto<?> one(@PathVariable("username") String username) {
+    public ResponseDto<?> user(@PathVariable("username") String username) {
         return ResponseDto.of(userService.findUserInfo(username));
     }
 
