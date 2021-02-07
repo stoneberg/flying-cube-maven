@@ -34,8 +34,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
         try {
             String jwt = parseJwtFromHeader(request);
+            log.info("@1jwt=======================>{}", jwt);
 
             if (jwt != null && !jwtUtils.validateJwt(jwt)) { // token exists but not valid
+                log.info("@2jwt=======================>{}", jwt);
                 request.setAttribute("exception", GlobalExType.INVALID_JWT.getCode());
                 throw new IllegalAccessError(GlobalExType.INVALID_JWT.getMessage());
             }
@@ -45,6 +47,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
              * 만약 DB를 재조회 하지 않고 authentication을 만들려면
              * jwt 생성 시 payload(claim)안에 authentication 생성 시 필요 정보 추가 필요
              */
+            log.info("@3jwt=======================>{}", jwt);
             String username = jwtUtils.getUserNameFromJwt(jwt);
             log.info("@username=============>{}", username);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
