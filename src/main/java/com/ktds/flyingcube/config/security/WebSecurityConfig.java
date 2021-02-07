@@ -1,7 +1,8 @@
 package com.ktds.flyingcube.config.security;
 
 import com.ktds.flyingcube.common.utils.JwtUtils;
-import com.ktds.flyingcube.config.security.jwt.AuthEntryPointJwt;
+import com.ktds.flyingcube.config.security.jwt.ForbiddenHandler;
+import com.ktds.flyingcube.config.security.jwt.UnauthorizedHandler;
 import com.ktds.flyingcube.config.security.jwt.AuthTokenFilter;
 import com.ktds.flyingcube.config.security.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -22,15 +23,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsServiceImpl userDetailsService;
-    private final AuthEntryPointJwt unauthorizedHandler;
+    private final UnauthorizedHandler unauthorizedHandler; // 401
+    private final ForbiddenHandler forbiddenHandler; // 403
     private final JwtUtils jwtUtils;
 
     public WebSecurityConfig(UserDetailsServiceImpl userDetailsService,
-                             AuthEntryPointJwt unauthorizedHandler,
+                             UnauthorizedHandler unauthorizedHandler,
+                             ForbiddenHandler forbiddenHandler,
                              JwtUtils jwtUtils
     ) {
         this.userDetailsService = userDetailsService;
         this.unauthorizedHandler = unauthorizedHandler;
+        this.forbiddenHandler = forbiddenHandler;
         this.jwtUtils = jwtUtils;
     }
 
@@ -57,7 +61,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().disable()
                 .headers().frameOptions().disable().and()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+                .exceptionHandling()
+                .authenticationEntryPoint(unauthorizedHandler)
+                .accessDeniedHandler(forbiddenHandler)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

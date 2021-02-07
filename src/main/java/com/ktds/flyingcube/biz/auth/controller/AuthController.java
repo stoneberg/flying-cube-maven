@@ -51,7 +51,7 @@ public class AuthController {
         redisUtils.setDataExpire(refreshToken, userDetails.getUsername(), refreshExpirationDateInMs);
 
         JwtResponse jwtResponse = JwtResponse.builder()
-                .type(JwtUtils.BEARER_TOKEN)
+                .type(JwtUtils.TOKEN_TYPE)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .user(userDetails)

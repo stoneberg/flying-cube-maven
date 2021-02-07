@@ -13,15 +13,16 @@ import java.util.*;
 @Component
 public class JwtUtils {
     private static final Logger log = LoggerFactory.getLogger(JwtUtils.class);
-    public static final String BEARER_TOKEN = "Bearer";
+    public static final String TOKEN_HEADER = "Authorization";
+    public static final String TOKEN_TYPE = "Bearer";
 
-    private String secret;
+    private String secretKey;
     private Long expirationDateInMs;
     private Long refreshExpirationDateInMs;
 
-    @Value("${fc2.jwt.secret}")
-    public void setSecret(String secret) {
-        this.secret = secret;
+    @Value("${fc2.jwt.secretKey}")
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
     }
 
     @Value("${fc2.jwt.expirationDateInMs}")
@@ -48,7 +49,7 @@ public class JwtUtils {
                 .setSubject(userDetails.getUsername()) // save username in subject
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expirationDateInMs))
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
     }
 
@@ -57,20 +58,21 @@ public class JwtUtils {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpirationDateInMs))
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
 
     }
 
-    // fetch username stored in token subject
+    // fetch username(userid) stored in token subject
     public String getUserNameFromJwt(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
-    public boolean validateJwt(String authToken) {
+    // Jwt 토큰의 유효성 + 만료일자 확인
+    public boolean validateJwt(String jwtToken) {
         try {
-            Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
-            return true;
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
+            return !claims.getBody().getExpiration().before(new Date());
         } catch (SignatureException e) {
             log.error("Invalid JWT signature: {}", e.getMessage());
         } catch (MalformedJwtException e) {
