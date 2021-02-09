@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum TransactionExType implements BaseExceptionType {
-    PAYMENT_FAIL("TE0001", "비용 지급 처리가 실패되었습니다.");
+    PAYMENT_FAIL("PAYMENT_FAIL", "비용 지급 처리가 실패되었습니다.");
 
 	private final String code;
     private final String message;

@@ -45,7 +45,7 @@ public class DeploymentService {
     // get one
     public OneDto findDeployment(Integer deploymentId) {
         Deployment deployment = deploymentRepository.findById(deploymentId)
-                .orElseThrow(() -> new ApplicationException(ApplicationExType.NOT_FOUND));
+                .orElseThrow(() -> new ApplicationException(ApplicationExType.RESOURCE_NOT_FOUND));
         return deploymentMapper.toDto(deployment);
     }
 
@@ -53,7 +53,7 @@ public class DeploymentService {
     @Transactional
     public OneDto updateDeployment(Integer deploymentId, DeploymentDto updateDto) {
         Deployment deployment = deploymentRepository.findById(deploymentId)
-                .orElseThrow(() -> new ApplicationException(ApplicationExType.NOT_FOUND));
+                .orElseThrow(() -> new ApplicationException(ApplicationExType.RESOURCE_NOT_FOUND));
         deployment.updateDeployment(updateDto);
         return deploymentMapper.toDto(deployment);
     }
@@ -62,7 +62,7 @@ public class DeploymentService {
     @Transactional
     public void deleteDeployment(Integer deploymentId) {
         Deployment deployment = deploymentRepository.findById(deploymentId)
-                .orElseThrow(() -> new ApplicationException(ApplicationExType.NOT_FOUND));
+                .orElseThrow(() -> new ApplicationException(ApplicationExType.RESOURCE_NOT_FOUND));
         deploymentRepository.deleteById(deploymentId);
     }
  

@@ -47,14 +47,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
              * 만약 DB를 재조회 하지 않고 authentication을 만들려면
              * jwt 생성 시 payload(claim)안에 authentication 생성 시 필요 정보 추가 필요
              */
-            log.info("@3jwt=======================>{}", jwt);
-            String username = jwtUtils.getUserNameFromJwt(jwt);
-            log.info("@username=============>{}", username);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (jwt != null && jwtUtils.validateJwt(jwt)) {
+                log.info("@3jwt=======================>{}", jwt);
+                String username = jwtUtils.getUserNameFromJwt(jwt);
+                log.info("@username=============>{}", username);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
 
         } catch (Exception e) {
             log.error(e.getMessage());
