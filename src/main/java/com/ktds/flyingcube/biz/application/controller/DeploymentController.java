@@ -25,7 +25,8 @@ public class DeploymentController {
     }
 
     @GetMapping("/deployments")
-    public ResponseDto<?> all(final FindDto findDto, Pageable pageable) {
+    public ResponseDto<?> all(final FindDto findDto, Pageable pageable) throws InterruptedException {
+        Thread.sleep((long)(Math.random() * 10000));
         Page<DeploymentRes.AllDto> page = deploymentService.findDeployments(findDto, pageable);
         return ResponseDto.of(page);
     }
