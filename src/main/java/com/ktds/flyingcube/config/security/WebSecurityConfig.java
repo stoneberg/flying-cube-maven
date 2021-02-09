@@ -5,6 +5,7 @@ import com.ktds.flyingcube.config.security.jwt.ForbiddenHandler;
 import com.ktds.flyingcube.config.security.jwt.UnauthorizedHandler;
 import com.ktds.flyingcube.config.security.jwt.AuthTokenFilter;
 import com.ktds.flyingcube.config.security.service.UserDetailsServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,29 +20,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    // private final CustomAuthProviderService customAuthProviderService;
     private final UserDetailsServiceImpl userDetailsService;
     private final UnauthorizedHandler unauthorizedHandler; // 401
     private final ForbiddenHandler forbiddenHandler; // 403
     private final JwtUtils jwtUtils;
 
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService,
-                             UnauthorizedHandler unauthorizedHandler,
-                             ForbiddenHandler forbiddenHandler,
-                             JwtUtils jwtUtils
-    ) {
-        this.userDetailsService = userDetailsService;
-        this.unauthorizedHandler = unauthorizedHandler;
-        this.forbiddenHandler = forbiddenHandler;
-        this.jwtUtils = jwtUtils;
-    }
-
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
+
+    //    @Override
+    //    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    //        auth.authenticationProvider(customAuthProviderService);
+    //    }
 
     @Bean
     @Override
@@ -82,5 +79,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter(jwtUtils, userDetailsService);
     }
+
 
 }

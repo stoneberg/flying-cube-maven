@@ -1,14 +1,14 @@
 package com.ktds.flyingcube.biz.auth.domain;
 
-import java.util.HashSet;
-import java.util.Set;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@ToString
 @Table(name = "tb_users",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "username"),
