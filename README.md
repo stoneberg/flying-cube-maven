@@ -2,7 +2,7 @@
 - Springboot Backend
 ```
 - You need to install redis to test
-- https://github.com/MicrosoftArchive/redis/releases (windows)
+- [Window Redis Download](https://github.com/MicrosoftArchive/redis/releases"redis download")
 ```
 
 
