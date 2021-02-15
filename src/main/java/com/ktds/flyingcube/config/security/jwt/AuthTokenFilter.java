@@ -1,6 +1,6 @@
 package com.ktds.flyingcube.config.security.jwt;
 
-import com.ktds.flyingcube.common.exception.GlobalExType;
+import com.ktds.flyingcube.common.exception.ApplicationExType;
 import com.ktds.flyingcube.common.utils.JwtUtils;
 import com.ktds.flyingcube.config.security.service.UserDetailsServiceImpl;
 import org.apache.commons.lang3.StringUtils;
@@ -38,8 +38,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
             if (jwt != null && !jwtUtils.validateJwt(jwt)) { // token exists but not valid
                 log.info("@2jwt=======================>{}", jwt);
-                request.setAttribute("exception", GlobalExType.INVALID_JWT.getCode());
-                throw new IllegalAccessError(GlobalExType.INVALID_JWT.getMessage());
+                request.setAttribute("exception", ApplicationExType.INVALID_ACCESS_JWT.getCode());
+                throw new IllegalAccessError(ApplicationExType.INVALID_ACCESS_JWT.getMessage());
             }
 
             /**

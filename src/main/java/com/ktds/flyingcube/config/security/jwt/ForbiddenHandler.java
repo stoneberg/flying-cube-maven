@@ -1,6 +1,6 @@
 package com.ktds.flyingcube.config.security.jwt;
 
-import com.ktds.flyingcube.common.exception.GlobalExType;
+import com.ktds.flyingcube.common.exception.ApplicationExType;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +32,8 @@ public class ForbiddenHandler implements AccessDeniedHandler {
         JSONObject JObject = new JSONObject();
         JObject.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         JObject.put("success", false);
-        JObject.put("message", GlobalExType.FORBIDDEN_ACCESS.getMessage());
-        JObject.put("code", GlobalExType.FORBIDDEN_ACCESS.getCode());
+        JObject.put("message", ApplicationExType.FORBIDDEN_ACCESS.getMessage());
+        JObject.put("code", ApplicationExType.FORBIDDEN_ACCESS.getCode());
         JObject.put("errors", Collections.singletonList(deniedException.getMessage()));
         JObject.put("path", request.getRequestURL().toString());
 

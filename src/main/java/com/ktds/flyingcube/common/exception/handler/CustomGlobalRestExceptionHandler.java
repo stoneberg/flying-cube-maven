@@ -1,8 +1,8 @@
 package com.ktds.flyingcube.common.exception.handler;
 
+import com.ktds.flyingcube.common.exception.ApplicationExType;
 import com.ktds.flyingcube.common.exception.ApplicationException;
 import com.ktds.flyingcube.common.exception.BaseExceptionType;
-import com.ktds.flyingcube.common.exception.GlobalExType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,7 +41,7 @@ public class CustomGlobalRestExceptionHandler {
     public ResponseEntity<?> handleTransactionException(ApplicationException ex, WebRequest request) {
         log.error("▒▒▒▒▒▒▒▒ EXCEPTION ▒▒▒▒▒▒▒▒ {}", ExceptionUtils.getMessage(ex));
         log.error("▒▒▒▒▒▒▒▒ EXCEPTION ▒▒▒▒▒▒▒▒ {}", ExceptionUtils.getStackTrace(ex));
-        return new ResponseEntity<>(buildError(Error.create(ex.getExceptionType()), request), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(buildError(Error.create(ex.getExceptionType()), request), ex.getHttpStatus() == null ? HttpStatus.BAD_REQUEST : ex.getHttpStatus());
     }
     
 	
@@ -51,14 +51,14 @@ public class CustomGlobalRestExceptionHandler {
     protected ResponseEntity<?> handleBadCredentialsException(BadCredentialsException ex, WebRequest request) {
         log.error("▒▒▒▒▒▒▒▒ EXCEPTION ▒▒▒▒▒▒▒▒ {}", ExceptionUtils.getMessage(ex));
         log.error("▒▒▒▒▒▒▒▒ EXCEPTION ▒▒▒▒▒▒▒▒ {}", ExceptionUtils.getStackTrace(ex));
-        return new ResponseEntity<>(buildError(GlobalExType.USER_NOT_FOUND, request), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(buildError(ApplicationExType.USER_NOT_FOUND, request), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
         log.error("▒▒▒▒▒▒▒▒ EXCEPTION ▒▒▒▒▒▒▒▒ {}", ExceptionUtils.getMessage(ex));
         log.error("▒▒▒▒▒▒▒▒ EXCEPTION ▒▒▒▒▒▒▒▒ {}", ExceptionUtils.getStackTrace(ex));
-        return new ResponseEntity<>(buildError(GlobalExType.INPUT_VALUE_INVALID, request), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(buildError(ApplicationExType.INPUT_VALUE_INVALID, request), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class, })
@@ -66,28 +66,28 @@ public class CustomGlobalRestExceptionHandler {
         log.error("▒▒▒▒▒▒▒▒ EXCEPTION ▒▒▒▒▒▒▒▒ {}", ExceptionUtils.getMessage(ex));
         log.error("▒▒▒▒▒▒▒▒ EXCEPTION ▒▒▒▒▒▒▒▒ {}", ExceptionUtils.getStackTrace(ex));
         final List<ErrorResponse.FieldError> fieldErrors = getFieldErrors(ex.getBindingResult());
-        return new ResponseEntity<>(buildError(GlobalExType.INPUT_VALUE_INVALID, fieldErrors.get(0).getReason(), request), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(buildError(ApplicationExType.INPUT_VALUE_INVALID, fieldErrors.get(0).getReason(), request), HttpStatus.BAD_REQUEST);
     }
     
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected ResponseEntity<?> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex, WebRequest request) {
         log.error("▒▒▒▒▒▒▒▒ EXCEPTION ▒▒▒▒▒▒▒▒ {}", ExceptionUtils.getMessage(ex));
         log.error("▒▒▒▒▒▒▒▒ EXCEPTION ▒▒▒▒▒▒▒▒ {}", ExceptionUtils.getStackTrace(ex));
-        return new ResponseEntity<>(buildError(GlobalExType.METHOD_NOT_ALLOWED, request), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(buildError(ApplicationExType.METHOD_NOT_ALLOWED, request), HttpStatus.BAD_REQUEST);
     }
     
     @ExceptionHandler({ConstraintViolationException.class, DataIntegrityViolationException.class})
     protected ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
         log.error("▒▒▒▒▒▒▒▒ EXCEPTION ▒▒▒▒▒▒▒▒ {}", ExceptionUtils.getMessage(ex));
         log.error("▒▒▒▒▒▒▒▒ EXCEPTION ▒▒▒▒▒▒▒▒ {}", ExceptionUtils.getStackTrace(ex));
-        return new ResponseEntity<>(buildError(GlobalExType.DATA_ACCESS_FAILED, request), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(buildError(ApplicationExType.DATA_ACCESS_FAILED, request), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<?> handleAnyException(Exception ex, WebRequest request) {
         log.error("▒▒▒▒▒▒▒▒ EXCEPTION ▒▒▒▒▒▒▒▒ {}", ExceptionUtils.getMessage(ex));
         log.error("▒▒▒▒▒▒▒▒ EXCEPTION ▒▒▒▒▒▒▒▒ {}", ExceptionUtils.getStackTrace(ex));
-        return new ResponseEntity<>(buildError(GlobalExType.UNKNOWN_EXCEPTION, request), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(buildError(ApplicationExType.UNKNOWN_EXCEPTION, request), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private ErrorResponse buildError(Error error, WebRequest request) {

@@ -1,6 +1,6 @@
 package com.ktds.flyingcube.config.security.jwt;
 
-import com.ktds.flyingcube.common.exception.GlobalExType;
+import com.ktds.flyingcube.common.exception.ApplicationExType;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -37,13 +37,13 @@ public class UnauthorizedHandler implements AuthenticationEntryPoint {
         JObject.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         JObject.put("success", false);
 
-        if (StringUtils.equals(GlobalExType.INVALID_JWT.getCode(), exception)) {
-            JObject.put("message", GlobalExType.INVALID_JWT.getMessage());
-            JObject.put("code", GlobalExType.INVALID_JWT.getCode());
+        if (StringUtils.equals(ApplicationExType.INVALID_ACCESS_JWT.getCode(), exception)) {
+            JObject.put("message", ApplicationExType.INVALID_ACCESS_JWT.getMessage());
+            JObject.put("code", ApplicationExType.INVALID_ACCESS_JWT.getCode());
             JObject.put("errors", Collections.singletonList("user access token has expired!"));
         } else {
-            JObject.put("message", GlobalExType.NOT_AUTHORIZED.getMessage());
-            JObject.put("code", GlobalExType.NOT_AUTHORIZED.getCode());
+            JObject.put("message", ApplicationExType.NOT_AUTHORIZED.getMessage());
+            JObject.put("code", ApplicationExType.NOT_AUTHORIZED.getCode());
             JObject.put("errors", Collections.singletonList(authException.getMessage()));
         }
 

@@ -2,6 +2,8 @@ package com.ktds.flyingcube.biz.auth.controller;
 
 import com.ktds.flyingcube.biz.auth.dto.AuthReq.LoginDto;
 import com.ktds.flyingcube.biz.auth.dto.AuthReq.TokenDto;
+import com.ktds.flyingcube.common.exception.ApplicationExType;
+import com.ktds.flyingcube.common.exception.ApplicationException;
 import com.ktds.flyingcube.common.response.JwtResponse;
 import com.ktds.flyingcube.common.utils.JwtUtils;
 import com.ktds.flyingcube.common.utils.RedisUtils;
@@ -10,6 +12,7 @@ import com.ktds.flyingcube.config.security.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -63,29 +66,30 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(@Valid @RequestBody TokenDto tokenDto) {
         log.info("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
-        String newAccessToken = "";
-        String newRefreshToken = "";
         JwtResponse jwtResponse = new JwtResponse();
         String refreshToken = tokenDto.getRefreshToken();
         // check refresh token is valid
         final boolean isValidJwt = jwtUtils.validateJwt(refreshToken);
         log.info("@isValidJwt========>{}", isValidJwt);
 
-        if (isValidJwt) {
-            // get username from redis
-            final String username = redisUtils.getData(refreshToken);
-            log.info("@username==========>{}", username);
-            final UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(username);
-            log.info("@userDetails by refresh token==========>{}", userDetails);
-            newAccessToken = jwtUtils.generateJwt(userDetails);
-            newRefreshToken = jwtUtils.generateRefreshJwt(userDetails);
-            // delete old refresh token on redis
-            redisUtils.deleteData(refreshToken);
-            // set new refresh token
-            redisUtils.setDataExpire(newRefreshToken, userDetails.getUsername(), refreshExpirationDateInMs);
-            jwtResponse.setAccessToken(newAccessToken);
-            jwtResponse.setRefreshToken(newRefreshToken);
+        if (!isValidJwt) {
+            throw new ApplicationException(ApplicationExType.INVALID_REFRESH_JWT, HttpStatus.UNAUTHORIZED);
         }
+
+        // get username from redis
+        final String username = redisUtils.getData(refreshToken);
+        log.info("@username==========>{}", username);
+        final UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(username);
+        log.info("@userDetails by refresh token==========>{}", userDetails);
+        String newAccessToken = jwtUtils.generateJwt(userDetails);
+        String newRefreshToken = jwtUtils.generateRefreshJwt(userDetails);
+        // delete old refresh token on redis
+        redisUtils.deleteData(refreshToken);
+        // set new refresh token
+        redisUtils.setDataExpire(newRefreshToken, userDetails.getUsername(), refreshExpirationDateInMs);
+        jwtResponse.setAccessToken(newAccessToken);
+        jwtResponse.setRefreshToken(newRefreshToken);
+
         log.info("@jwtResponse.newAccessToken======>{}", newAccessToken);
         log.info("@jwtResponse.newRefreshToken=====>{}", newRefreshToken);
         log.info("@jwtResponse.jwtResponse=========>{}", jwtResponse);
