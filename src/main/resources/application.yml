@@ -39,7 +39,7 @@ logging:
 fc2:
   jwt:
     secretKey: 123456789012345678901234567890
-    expirationDateInMs: 60000 # half hour : 1800000 # 60000 : 1min
+    expirationDateInMs: 1800000 # half hour : 1800000 # 60000 : 1min
     refreshExpirationDateInMs: 3600000 # 3600000 # hour
   aes:
     secretKey: OjpARGV2ZWxvcGVkIEJ5IEtURFMsIExlYWd1ZVN5c3RlbQ==
