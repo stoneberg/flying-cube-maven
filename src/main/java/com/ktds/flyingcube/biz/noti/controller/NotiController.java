@@ -16,7 +16,7 @@ public class NotiController {
 
 	private final NotiService notiService;
 	
-	@PostMapping("/change")
+	@PostMapping("/role-change")
 	public ResponseDto<?> changeNoti(@RequestBody Target target) {
 		notiService.sendRoleChangeMessage(target);
 		return ResponseDto.ok();
