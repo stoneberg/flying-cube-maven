@@ -22,6 +22,12 @@ public class AESUtils {
     @Value("${fc2.aes.secretKey}")
     private String secretKey;
 
+    public static byte[] getNextSalt() {
+        byte[] salt = new byte[8];
+        RANDOM.nextBytes(salt);
+        return salt;
+    }
+
     @SneakyThrows
     public String encrypt(String plainText) {
         byte[] salt =  getNextSalt();
@@ -40,22 +46,14 @@ public class AESUtils {
         return Base64.getEncoder().encodeToString(prefixSaltEncrypted);
     }
 
-    public static byte[] getNextSalt() {
-        byte[] salt = new byte[8];
-        RANDOM.nextBytes(salt);
-        return salt;
-    }
-
     @SneakyThrows
     public String decrypt(String cipherText) {
         byte[] cipherData = Base64.getDecoder().decode(cipherText);
         byte[] saltData = Arrays.copyOfRange(cipherData, 8, 16);
-
         MessageDigest md5 = MessageDigest.getInstance("MD5");
         final byte[][] keyAndIV = generateKeyAndIV(32, 16, 1, saltData, secretKey.getBytes(StandardCharsets.UTF_8), md5);
         SecretKeySpec key = new SecretKeySpec(keyAndIV[0], "AES");
         IvParameterSpec iv = new IvParameterSpec(keyAndIV[1]);
-
         byte[] encrypted = Arrays.copyOfRange(cipherData, 16, cipherData.length);
         Cipher aesCBC = Cipher.getInstance("AES/CBC/PKCS5Padding");
         aesCBC.init(Cipher.DECRYPT_MODE, key, iv);
