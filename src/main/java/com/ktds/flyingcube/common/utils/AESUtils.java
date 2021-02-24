@@ -10,14 +10,41 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.DigestException;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Random;
 
 @Component
 public class AESUtils {
 
+    private static final Random RANDOM = new SecureRandom();
     @Value("${fc2.aes.secretKey}")
     private String secretKey;
+
+    @SneakyThrows
+    public String encrypt(String plainText) {
+        byte[] salt =  getNextSalt();
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        final byte[][] keyAndIV = generateKeyAndIV(32, 16, 1, salt, secretKey.getBytes(StandardCharsets.UTF_8), md5);
+        SecretKeySpec skeySpec = new SecretKeySpec(keyAndIV[0], "AES");
+        IvParameterSpec iv = new IvParameterSpec(keyAndIV[1]);
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
+        byte[] encrypted = cipher.doFinal(plainText.getBytes());
+        byte[] prefix = "Salted__".getBytes(StandardCharsets.US_ASCII);
+        byte[] prefixSaltEncrypted = new byte[prefix.length + salt.length + encrypted.length];
+        System.arraycopy(prefix, 0, prefixSaltEncrypted, 0, prefix.length);
+        System.arraycopy(salt, 0, prefixSaltEncrypted, prefix.length, salt.length);
+        System.arraycopy(encrypted, 0, prefixSaltEncrypted, prefix.length + salt.length, encrypted.length);
+        return Base64.getEncoder().encodeToString(prefixSaltEncrypted);
+    }
+
+    public static byte[] getNextSalt() {
+        byte[] salt = new byte[8];
+        RANDOM.nextBytes(salt);
+        return salt;
+    }
 
     @SneakyThrows
     public String decrypt(String cipherText) {

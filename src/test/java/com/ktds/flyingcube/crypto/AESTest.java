@@ -19,9 +19,11 @@ class AESTest {
 
     @Test
     void runDecryptTest() {
-        String chipherText = "U2FsdGVkX19C760rM7qZjGgE7lIJxIUdFEnqn3+2x9MNnhisL56b1eUsDiUfXKsL";
+        String plainText = "where is my hat?";
+        String chipherText = aesUtils.encrypt(plainText);
+        // String chipherText = "U2FsdGVkX19C760rM7qZjGgE7lIJxIUdFEnqn3+2x9MNnhisL56b1eUsDiUfXKsL";
         final String decrypt = aesUtils.decrypt(chipherText);
         log.info("@decrypt text=====>{}", decrypt);
-        assertThat(decrypt).isEqualTo("where is my hat?");
+        assertThat(decrypt).isEqualTo(plainText);
     }
 }
